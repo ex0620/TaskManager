@@ -66,23 +66,28 @@ class TaskManager (val maxSize: Int = 100) {
     }
   }
 
+  protected def deleteAll(): Unit = {
+    this.processes.clear()
+    for (i <- 0 until this.maxSize) {
+      this.pidStatus(i) = false
+    }
+  }
+
   def killByPriority(priority: Priority): Unit = {
     this.synchronized{
       val kept = this.processes.filter(_.priority != priority)
-      this.processes.clear()
+      this.deleteAll()
+
       this.processes ++= kept
       for (p <- kept) {
-        this.pidStatus(p.pid) = false
+        this.pidStatus(p.pid) = true
       }
     }
   }
 
   def killAll(): Unit = {
     this.synchronized{
-      this.processes.clear()
-      for (i <- 0 until this.maxSize) {
-        this.pidStatus(i) = false
-      }
+      this.deleteAll()
     }
   }
 

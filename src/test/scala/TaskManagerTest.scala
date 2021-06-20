@@ -167,14 +167,14 @@ class TaskManagerTest extends FunSuite with Conductors  {
       taskManager.killByPriority(High)
       assert(taskManager.listByPid().size == 100)
 
-      for (i <- 0 until 300) {
+      for (i <- 0 until 201) {
         val pid = taskManager.add(null)
         if (pid >= 0) {
           pids.append(pid)
         }
       }
       pids.size should equal(200)
-      taskManager.listByPid().toSet.size should equal(maxSize)
+      taskManager.listByPid().map(_.pid).toSet.size should equal(maxSize)
     }
 
   }
